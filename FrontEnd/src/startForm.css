@@ -1,0 +1,11 @@
+.Login-title{
+    font-family: GothicE,"Microsoft YaHei UI","Arial Black";
+    font-size: xx-large;
+    transform: rotate(10deg);
+}
+
+.SignUp-title{
+    font-family: GothicE,"Microsoft YaHei UI","Arial Black";
+    font-size: xx-large;
+    transform:rotate(-10deg);
+}

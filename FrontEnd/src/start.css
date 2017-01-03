@@ -1,0 +1,19 @@
+.linkWrap{
+    font-size: larger;
+}
+
+.linkRef:hover{
+    display: inline-block;
+    font-size: xx-large;
+    font-weight: bolder;
+}
+
+.indexRef{
+    color: #0099FF;
+    transition: all 0.3s;
+}
+
+.indexRef:hover{
+    font-size: x-large;
+    font-weight: bold;
+}
