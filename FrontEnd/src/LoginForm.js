@@ -12,44 +12,27 @@ const LoginForm=React.createClass({
         };
     },
     handleSubmit:function(){
-        var IDForCheck=this.refs.LoginID.value;
-        var PasswdForCheck=this.refs.LoginPasswd.value;
+        var Num = this.refs.Num.value;
+        var passwd = this.refs.passwd.value;
         var that=this;
-        fetch('ajax/test.json')
-            .then(function (response) {
-                if (response.ok) {
-                    response.json().then(function (data) {
-                        for(var i in data.index){
-                            if(data.index[i].ID===IDForCheck){
-                                if(data.index[i].passwd===PasswdForCheck){
-                                    that.setState({
-                                        LoginState:'Login succeeded!'
-                                    });
-                                    var CheckedID = data.index[i].ID;
-                                    var Tips = 'Choose your ideal question quickly.';
-                                    that.props.changeItem(CheckedID);
-                                    that.props.changeTIPS(Tips);
-                                }
-                                else{
-                                    that.setState({
-                                        LoginState:'Invalid ID or Password!'
-                                    });
-                                }
-                                break;
-                            }
-                            else{
-                                that.setState({
-                                    LoginState:'Invalid ID or Password!'
-                                });
-                            }
-                        }
-                    });
-                } else {
-                    console.log('请求失败，状态码为', response.status);
-                }
-            }, function(err) {
-                console.log('出错：', err);
-            });
+        fetch("logincheck.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "number=" + Num + "&passwd=" + passwd
+        }).then(function(res) {
+            if (res.ok) {
+                var FetchRoute = '#/logged';
+                var Tips = 'Choose your ideal question quickly.';
+                that.props.changeItem(Num,FetchRoute);
+                that.props.changeTIPS(Tips);
+            } else if (res.status === 401) {
+                console.log("Oops! You are not authorized.");
+            }
+        }, function(e) {
+            console.log("Error submitting form!");
+        });
     },
     render:function () {
         return(
@@ -57,8 +40,8 @@ const LoginForm=React.createClass({
                 <form onSubmit={this.handleSubmit}>
                     <p className="Login-title">Login</p>
                     <h4>{this.state.LoginState}</h4>
-                    <input type="text" ref="LoginID" placeholder="Enter your ID here"/>
-                    <input type="password" ref="LoginPasswd" placeholder="Enter your password here"/>
+                    <input name="number" type="text" ref="Num" placeholder="请输入学号"/>
+                    <input name="passwd" type="password" ref="passwd" placeholder="请输入密码"/>
                     <button>Submit</button>
                 </form>
             </div>

@@ -7,11 +7,10 @@ import fetch from 'isomorphic-fetch'
 const SignUpForm=React.createClass({
     getInitialState:function(){
         return {
-            value: 'Enter your ID here.',
             hasID: 'Waiting to check your ID.'
         };
     },
-    handleChange:function (event) {
+    /*handleChange:function (event) {
         var valueForCheck=event.target.value;
         var that=this;
         fetch('ajax/test.json')
@@ -40,23 +39,48 @@ const SignUpForm=React.createClass({
             }, function(err) {
                 console.log('出错：', err);
             });
-    },
+    },*/
     handleSubmit:function(){
-        var CheckedID = this.refs.userID.value;
-        var FetchRoute = '#/logged';
-        var Tips = 'Choose your ideal question quickly.';
-        this.props.changeItem(CheckedID,FetchRoute);
-        this.props.changeTIPS(Tips);
+        var Num = this.refs.Num.value;
+        var Name = this.refs.Name.value;
+        var grp = this.refs.grp.value;
+        var passwd = this.refs.passwd.value;
+        var Confirm = this.refs.Confirm.value;
+        var that=this;
+        fetch("regcheck.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "number=" + Num + "&username=" + Name + "&grp=" + grp + "&passwd=" + passwd + "&confirm=" + Confirm
+        }).then(function(res) {
+            if (res.ok) {
+                var FetchRoute = '#/logged';
+                var Tips = 'Choose your ideal question quickly.';
+                that.props.changeItem(Num,FetchRoute);
+                that.props.changeTIPS(Tips);
+            } else if (res.status === 401) {
+                console.log("Oops! You are not authorized.");
+            }
+        }, function(e) {
+            console.log("Error submitting form!");
+        });
+
     },
     render:function () {
-        var value=this.state.value;
         return(
             <form onSubmit={this.handleSubmit}>
                 <p className="SignUp-title">Sign Up</p>
                 <h4>{this.state.hasID}</h4>
-                <input name="groupID" type="text" placeholder="Enter your group number"/>
-                <input ref="userID" name="ID" type="text" value={value} onChange={this.handleChange}/>
-                <input name="passwd" type="password" placeholder="Enter your password here"/>
+                <input name="number" ref="Num" type="text" placeholder="请输入学号"/>
+                <br/>
+                <input name="username" ref="Name"  type="text" placeholder="请输入姓名"/>
+                <br/>
+                <input name="grp" ref="grp"  type="text" placeholder="请输入小组名"/>
+                <br/>
+                <input name="passwd" ref="passwd"  type="password" placeholder="请输入密码"/>
+                <br/>
+                <input name="confirm" ref="Confirm"  type="password" placeholder="再输入一次密码"/>
                 <button>Submit</button>
             </form>
         );

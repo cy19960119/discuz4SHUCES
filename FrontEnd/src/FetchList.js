@@ -11,6 +11,7 @@ function getQuestion(that){
                 response.json().then(function (data) {
                     that.setState({nodeList:[]});
                     for(var i in data.questionList){
+                        if(1)
                         that.addNode(data.questionList[i])
                     }
                 });
@@ -42,9 +43,6 @@ const FetchList=React.createClass({
             nodeList:[],
         }
     },
-    componentDidMount:function () {
-        document.addEventListener('scroll',this.handleScroll);
-    },
     componentWillUnmount(){
         document.removeEventListener('scroll',this.handleScroll);
     },
@@ -52,6 +50,7 @@ const FetchList=React.createClass({
         this.setState({nodeList:this.state.nodeList.concat(node)});
     },
     componentDidMount:function () {
+        document.addEventListener('scroll',this.handleScroll);
         var that = this;
         //var scrollTop=document.body.scrollTop;
         //var scrollHeight=document.body.scrollHeight;
